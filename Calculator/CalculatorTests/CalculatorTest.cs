@@ -1,5 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+using Calculator;
 
 namespace Calculator.Tests
 {
@@ -9,38 +9,34 @@ namespace Calculator.Tests
         public TestContext TestContext { get; set; }
         private static TestContext _testContext;
 
-        public static Calculator calculator;
+        // // Run before all tests
+        // [ClassInitialize]
+        // public static void InitializeTestClass(TestContext testContext)
+        // {
+        //     _testContext = testContext;
+        // }
 
-        // Run before all tests
-        [ClassInitialize]
-        public static void InitializeTestClass(TestContext testContext)
-        {
-            _testContext = testContext;
-            calculator = new Calculator();
-        }
-
-        // Run after all tests
-        [ClassCleanup]
-        public static void CleanUpTestClass()
-        {
-            _testContext = null;
-            calculator = null;
-        }
+        // // Run after all tests
+        // [ClassCleanup]
+        // public static void CleanUpTestClass()
+        // {
+        //     _testContext = null;
+        // }
 
         // Run before each test
-        [TestInitialize]
-        public void SetupTest()
-        {
-            calculator = new Calculator();
+        // [TestInitialize]
+        // public void SetupTest()
+        // {
+        //     Calculator = new Calculator();
 
-            // por algum motivo essa linha quebra os testes com um NullPointerException
-            // arrisco que seja pelo fato dos TestMethods estarem dentro de cada classe especifica
-            // e nao dentro dessa classe de setup
-            // ToTry: Tambem colocar o SetupTest dentro de cada classe que herda dessa classe para
-            // entender o comportamento
+        //     // por algum motivo essa linha quebra os testes com um NullPointerException
+        //     // arrisco que seja pelo fato dos TestMethods estarem dentro de cada classe especifica
+        //     // e nao dentro dessa classe de setup
+        //     // ToTry: Tambem colocar o SetupTest dentro de cada classe que herda dessa classe para
+        //     // entender o comportamento
 
-            // Console.WriteLine("TestContext.TestName='{0}'", _testContext.TestName);
-        }
+        //     // Console.WriteLine("TestContext.TestName='{0}'", _testContext.TestName);
+        // }
     }
 
     [TestClass()]
@@ -51,9 +47,7 @@ namespace Calculator.Tests
         {
             decimal expectedResult = 2;
 
-            decimal methodResult = calculator.SumTwoNumbers(1, 1);
-
-            Console.WriteLine(calculator);
+            decimal methodResult = Calculator.SumTwoNumbers(1, 1);
 
             Assert.AreEqual(expectedResult, methodResult);
         }
@@ -63,7 +57,7 @@ namespace Calculator.Tests
         {
             decimal expectedResult = -2;
 
-            decimal methodResult = calculator.SumTwoNumbers(-1, -1);
+            decimal methodResult = Calculator.SumTwoNumbers(-1, -1);
 
             Assert.AreEqual(expectedResult, methodResult);
         }
@@ -73,7 +67,7 @@ namespace Calculator.Tests
         {
             decimal expectedResult = 0.2m;
 
-            decimal methodResult = calculator.SumTwoNumbers(0.1m, 0.1m);
+            decimal methodResult = Calculator.SumTwoNumbers(0.1m, 0.1m);
 
             Assert.AreEqual(expectedResult, methodResult);
         }
@@ -83,7 +77,7 @@ namespace Calculator.Tests
         {
             decimal expectedResult = -0.2m;
 
-            decimal methodResult = calculator.SumTwoNumbers(-0.1m, -0.1m);
+            decimal methodResult = Calculator.SumTwoNumbers(-0.1m, -0.1m);
 
             Assert.AreEqual(expectedResult, methodResult);
         }
@@ -97,7 +91,7 @@ namespace Calculator.Tests
         {
             decimal expectedResult = 0;
 
-            decimal methodResult = calculator.SubtractTwoNumbers(1, 1);
+            decimal methodResult = Calculator.SubtractTwoNumbers(1, 1);
 
             Assert.AreEqual(expectedResult, methodResult);
         }
@@ -107,7 +101,7 @@ namespace Calculator.Tests
         {
             decimal expectedResult = 0;
 
-            decimal methodResult = calculator.SubtractTwoNumbers(-1, -1);
+            decimal methodResult = Calculator.SubtractTwoNumbers(-1, -1);
 
             Assert.AreEqual(expectedResult, methodResult);
         }
@@ -117,7 +111,7 @@ namespace Calculator.Tests
         {
             decimal expectedResult = 0;
 
-            decimal methodResult = calculator.SubtractTwoNumbers(0.1m, 0.1m);
+            decimal methodResult = Calculator.SubtractTwoNumbers(0.1m, 0.1m);
 
             Assert.AreEqual(expectedResult, methodResult);
         }
@@ -127,7 +121,7 @@ namespace Calculator.Tests
         {
             decimal expectedResult = 0;
 
-            decimal methodResult = calculator.SubtractTwoNumbers(-0.1m, -0.1m);
+            decimal methodResult = Calculator.SubtractTwoNumbers(-0.1m, -0.1m);
 
             Assert.AreEqual(expectedResult, methodResult);
         }
