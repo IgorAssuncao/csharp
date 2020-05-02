@@ -6,9 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Calculator\Calculator.csproj" />
+    <ProjectReference Include="..\Calculator\MathCustom.csproj" />
     <ProjectReference Include="..\Common\Common.csproj" />
-    <ProjectReference Include="..\Menu\Menu.csproj" />
+    <ProjectReference Include="..\Menu\UI.csproj" />
   </ItemGroup>
 
 </Project>

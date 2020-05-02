@@ -1,4 +1,6 @@
 ﻿using System;
+using UI;
+using MathCustom;
 
 namespace Main
 {
@@ -12,8 +14,8 @@ namespace Main
 
             do
             {
-                Menu.Menu.ShowMenu();
-                input = Menu.Menu.ReadOptionFromConsole("Choose an option");
+                Menu.ShowMenu();
+                input = Menu.ReadOptionFromConsole("Choose an option");
 
                 switch (input)
                 {
@@ -43,37 +45,42 @@ namespace Main
 
             } while (input > 0);
 
-            Menu.Menu.SayBye();
+            Menu.SayBye();
         }
 
         static void CallMethod(string methodName)
         {
-            string[] methodsNames = { "Sum", "Subtract", "Mutiply", "Divide" };
+            string[] methodsNames = { "Sum", "Subtract", "Multiply", "Divide" };
 
             if (!Array.Exists(methodsNames, name => name == methodName))
             {
                 return;
             }
 
-            decimal firstNumber = Menu.Menu.ReadDecimalFromConsole("Insert number:");
-            decimal secondNumber = Menu.Menu.ReadDecimalFromConsole("Insert number:");
+            decimal firstNumber = Menu.ReadDecimalFromConsole("Insert number:");
+            decimal secondNumber = Menu.ReadDecimalFromConsole("Insert number:");
 
             switch (methodName)
             {
                 case "Sum":
-                    Console.WriteLine("Result: {0}", Calculator.Calculator.SumTwoNumbers(firstNumber, secondNumber));
+                    Console.WriteLine("Result: {0}", Calculator.SumTwoNumbers(firstNumber, secondNumber));
                     break;
 
                 case "Subtract":
-                    Console.WriteLine("Result: {0}", Calculator.Calculator.SubtractTwoNumbers(firstNumber, secondNumber));
+                    Console.WriteLine("Result: {0}", Calculator.SubtractTwoNumbers(firstNumber, secondNumber));
                     break;
 
                 case "Multiply":
-                    Console.WriteLine("Result: {0}", Calculator.Calculator.MultiplyTwoNumbers(firstNumber, secondNumber));
+                    Console.WriteLine("Result: {0}", Calculator.MultiplyTwoNumbers(firstNumber, secondNumber));
                     break;
 
                 case "Divide":
-                    Console.WriteLine("Result: {0}", Calculator.Calculator.DivideTwoNumbers(firstNumber, secondNumber));
+                    if (secondNumber == 0)
+                    {
+                        Console.WriteLine("0 isn't a valid number to divide");
+                        break;
+                    }
+                    Console.WriteLine("Result: {0}", Calculator.DivideTwoNumbers(firstNumber, secondNumber));
                     break;
 
                 default:

@@ -1,10 +1,9 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Calculator;
 
-namespace Calculator.Tests
+namespace MathCustom.Tests
 {
     [TestClass()]
-    public class CalculatorTest
+    public class CalculatorTests
     {
         public TestContext TestContext { get; set; }
         private static TestContext _testContext;
@@ -40,7 +39,7 @@ namespace Calculator.Tests
     }
 
     [TestClass()]
-    public class CalculatorSumTest : CalculatorTest
+    public class CalculatorSumTests : CalculatorTests
     {
         [TestMethod()]
         public void SumTwoPositiveNumbersTest()
@@ -84,7 +83,7 @@ namespace Calculator.Tests
     }
 
     [TestClass()]
-    public class CalculatorSubtractTest : CalculatorTest
+    public class CalculatorSubtractTests : CalculatorTests
     {
         [TestMethod()]
         public void SubtractTwoPositiveNumbersTest()

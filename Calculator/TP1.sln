@@ -5,15 +5,15 @@ VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Main", "Main\Main.csproj", "{9FBDBF33-ECB0-44C6-BCFC-0AFF571FFCE1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calculator", "Calculator\Calculator.csproj", "{3488B1D8-48C1-4883-8D6F-C1C0D712E527}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathCustom", "Calculator\MathCustom.csproj", "{3488B1D8-48C1-4883-8D6F-C1C0D712E527}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CalculatorTests", "CalculatorTests\CalculatorTests.csproj", "{94304675-F332-42C0-82BD-94B43E3C0446}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MathCustomTests", "CalculatorTests\MathCustomTests.csproj", "{94304675-F332-42C0-82BD-94B43E3C0446}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{ABDFAA62-AAFA-4559-B2ED-E740D2AEB420}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonTests", "CommonTests\CommonTests.csproj", "{C8D378DC-2ABF-4E47-A57D-2D2D1AF8F8DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Menu", "Menu\Menu.csproj", "{F964B666-7CE0-490A-8F41-3B4F212D4478}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UI", "Menu\UI.csproj", "{F964B666-7CE0-490A-8F41-3B4F212D4478}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,4 +1,4 @@
-﻿namespace Calculator
+﻿namespace MathCustom
 {
     public static class Calculator
     {

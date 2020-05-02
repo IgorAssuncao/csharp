@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Menu
+namespace UI
 {
     public class Menu
     {
