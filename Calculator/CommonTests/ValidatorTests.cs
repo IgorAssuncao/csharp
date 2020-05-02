@@ -5,6 +5,12 @@ namespace Common.Tests
     [TestClass()]
     public class ValidatorTests
     {
+
+    }
+
+    [TestClass()]
+    public class ValidateIntegersFromString : ValidatorTests
+    {
         [TestMethod()]
         public void ValidateIntegersFromStringTestWhenEmptyStringIsGiven()
         {
@@ -49,6 +55,58 @@ namespace Common.Tests
         public void ValidateIntegersFromStringTestWhenNumericStringIsGiven()
         {
             bool methodResult = Validator.ValidateIntegersFromString("123");
+
+            Assert.IsTrue(methodResult);
+        }
+    }
+
+    [TestClass()]
+    public class ValidateDecimalsFromString : ValidatorTests
+    {
+        [TestMethod()]
+        public void ValidateDecimalsFromStringTestWhenEmptyStringIsGiven()
+        {
+            bool methodResult = Validator.ValidateDecimalsFromString("");
+
+            Assert.IsFalse(methodResult);
+        }
+
+        [TestMethod()]
+        public void ValidateDecimalsFromStringTestWhenAlphaStringIsGiven()
+        {
+            bool methodResult = Validator.ValidateDecimalsFromString("abc");
+
+            Assert.IsFalse(methodResult);
+        }
+
+        [TestMethod()]
+        public void ValidateDecimalsFromStringTestWhenAlphaNumericStringAbc123IsGiven()
+        {
+            bool methodResult = Validator.ValidateDecimalsFromString("abc123");
+
+            Assert.IsFalse(methodResult);
+        }
+
+        [TestMethod()]
+        public void ValidateDecimalssFromStringTestWhenAlphaNumericString123AbcIsGiven()
+        {
+            bool methodResult = Validator.ValidateDecimalsFromString("123abc");
+
+            Assert.IsFalse(methodResult);
+        }
+
+        [TestMethod()]
+        public void ValidateDecimalsFromStringTestWhenAlphaNumericStringAbc123AbcIsGiven()
+        {
+            bool methodResult = Validator.ValidateDecimalsFromString("abc123abc");
+
+            Assert.IsFalse(methodResult);
+        }
+
+        [TestMethod()]
+        public void ValidateDecimalsFromStringTestWhenNumericStringIsGiven()
+        {
+            bool methodResult = Validator.ValidateDecimalsFromString("123");
 
             Assert.IsTrue(methodResult);
         }
