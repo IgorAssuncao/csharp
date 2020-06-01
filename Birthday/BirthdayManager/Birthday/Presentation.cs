@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using Model;
 using Service;
 
@@ -47,6 +48,9 @@ namespace Presentation
 
             if (personStatus.Registered)
                 Console.WriteLine($"{personStatus.Message}");
+            else
+                Console.WriteLine($"Person not registered - {personStatus.Message}");
+
             Console.WriteLine();
         }
 
@@ -80,26 +84,26 @@ namespace Presentation
             bool validDate = false;
             string input;
 
-            try
+            do
             {
-                do
+                try
                 {
-                    Console.WriteLine("Use the format MM-DD-YYYY");
+                    Console.WriteLine("Use the format YYYY-MM-DD");
                     Console.Write(message);
                     input = Console.ReadLine();
 
-                    date = DateTime.Parse(input);
+                    date = DateTime.ParseExact(input, "yyyy-MM-dd", CultureInfo.InvariantCulture);
 
                     validDate = true;
-                } while (!validDate);
-            }
-            catch (Exception)
-            {
-                if (!validDate)
-                {
-                    Console.WriteLine("Something went wrong, please try again...");
                 }
-            }
+                catch (Exception e)
+                {
+                    if (!validDate)
+                    {
+                        Console.WriteLine("Something went wrong, please try again...");
+                    }
+                }
+            } while (!validDate);
 
             return date;
         }
