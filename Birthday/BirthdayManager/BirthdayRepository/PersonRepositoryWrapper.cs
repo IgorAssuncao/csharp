@@ -1,32 +1,54 @@
-﻿using Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Model;
 
 namespace Repository
 {
-    public class PersonRepositoryWrapper : IPersonRepository
+    public static class PersonRepositoryWrapper
     {
-        public bool AddPerson(Person person, List<Person> personList)
+        public static IPersonRepository _personRepository = new PersonRepository();
+
+        public static List<Person> GetAllPeople()
+        {
+            return _personRepository.GetAllPeople();
+        }
+
+        public static Person GetPersonById(int Id)
+        {
+            return _personRepository.GetPersonById(Id);
+        }
+        public static bool AddPerson(Person person)
         {
             try
             {
-                personList.Add(person);
+                _personRepository.AddPerson(person);
                 return true;
             }
-            catch (Exception)
+            catch(Exception e)
             {
+                Console.WriteLine(e);
                 return false;
             }
         }
 
-        public Person GetPersonByName(string name, List<Person> personList)
+        public static void UpdatePerson(Person person)
         {
-            return personList.Find(person => person.Name == name);
+            _personRepository.UpdatePerson(person);
         }
 
-        public TimeSpan GetPersonRemainingTimeForBirthday(Person person)
+        public static void DeletePerson(Person person)
         {
-            return person.RemainingDaysForBirthday();
+            _personRepository.DeletePerson(person);
+        }
+
+        public static void AddFriend(Person person, int FriendId)
+        {
+            _personRepository.AddFriend(person, FriendId);
+        }
+
+        public static void RemoveFriend(Person person, int FriendId)
+        {
+            _personRepository.RemoveFriend(person, FriendId);
         }
     }
 }

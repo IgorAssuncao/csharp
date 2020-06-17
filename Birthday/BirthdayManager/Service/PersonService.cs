@@ -2,11 +2,39 @@
 using Model;
 using Repository;
 using System;
+using System.Collections.Generic;
+using System.Net.NetworkInformation;
+using System.Runtime.CompilerServices;
 
 namespace Service
 {
     public static class PersonService
     {
+        public static List<Person> GetAllPeople()
+        {
+            return PersonRepositoryWrapper.GetAllPeople();
+        }
+
+        public static PersonFound GetById(int Id)
+        {
+            try
+            {
+                Person person = PersonRepositoryWrapper.GetPersonById(Id);
+
+                PersonFound personStatus;
+
+                personStatus = person != null ? new PersonFound { Found = true, Person = person, Message = "Person Found!" } : throw new Exception("Person not found");
+
+                personStatus.RemainingTimeForBirthday = person.CalculatePersonBirthday();
+
+                return personStatus;
+            }
+            catch (Exception exception)
+            {
+                return new PersonFound { Found = false, Message = exception.Message };
+            }
+        }
+
         public static PersonAdded Add(string name, string lastname, DateTime birthday)
         {
             try
@@ -19,7 +47,7 @@ namespace Service
 
                 Person person = new Person(name, lastname, birthday);
 
-                bool addPersonResult = PersonRepository.AddPerson(person);
+                bool addPersonResult = PersonRepositoryWrapper.AddPerson(person);
 
                 PersonAdded personStatus = new PersonAdded { Registered = addPersonResult };
 
@@ -33,32 +61,39 @@ namespace Service
             }
         }
 
-        public static PersonFound GetByName(string name)
+        public static void UpdatePerson(int PersonId, string Name, string Lastname, DateTime Birthday)
         {
-            try
-            {
-                if (name == "")
-                    throw new Exception("Name is empty");
+            Person person = GetById(PersonId).Person;
 
-                Person person = PersonRepository.GetPersonByName(name);
+            person.Name = Name;
+            person.Lastname = Lastname;
+            person.Birthday = Birthday;
 
-                PersonFound personStatus;
-
-                personStatus = person != null ? new PersonFound { Found = true, Person = person, Message = "Person Found!" } : throw new Exception("Person not found");
-
-                personStatus.RemainingTimeForBirthday = CalculatePersonBirthday(personStatus.Person);
-
-                return personStatus;
-            }
-            catch (Exception exception)
-            {
-                return new PersonFound { Found = false, Message = exception.Message };
-            }
+            PersonRepositoryWrapper.UpdatePerson(person);
         }
 
-        private static TimeSpan CalculatePersonBirthday(Person person)
+        public static void DeletePerson(int PersonId)
         {
-            return person.RemainingDaysForBirthday();
+            Person person = PersonRepositoryWrapper.GetPersonById(PersonId);
+            PersonRepositoryWrapper.DeletePerson(person);
+        }
+
+        public static void AddPersonFriend(int PersonId, int FriendId)
+        {
+            Person person = PersonRepositoryWrapper.GetPersonById(PersonId);
+            PersonRepositoryWrapper.AddFriend(person, FriendId);
+
+            Person friend = PersonRepositoryWrapper.GetPersonById(FriendId);
+            PersonRepositoryWrapper.AddFriend(friend, PersonId);
+        }
+
+        public static void RemovePersonFriend(int PersonId, int FriendId)
+        {
+            Person person = PersonRepositoryWrapper.GetPersonById(PersonId);
+            PersonRepositoryWrapper.RemoveFriend(person, FriendId);
+
+            Person friend = PersonRepositoryWrapper.GetPersonById(FriendId);
+            PersonRepositoryWrapper.RemoveFriend(friend, PersonId);
         }
     }
 }

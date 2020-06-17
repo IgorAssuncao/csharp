@@ -1,28 +1,92 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
+
 using Model;
+using Context;
+using System.Collections.Generic;
 
 namespace Repository
 {
-    public static class PersonRepository
+    public class PersonRepository : IPersonRepository
     {
-        public static IPersonRepository _personRepository = new PersonRepositoryWrapper();
+        PersonContext PersonDb = new PersonContext();
 
-        public static List<Person> personList = new List<Person>();
-
-        public static bool AddPerson(Person person)
+        public List<Person> GetAllPeople()
         {
-            return _personRepository.AddPerson(person, personList);
+            try
+            {
+                return PersonDb.People.ToList<Person>();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
         }
 
-        public static Person GetPersonByName(string name)
+        public Person GetPersonById(int Id)
         {
-            return _personRepository.GetPersonByName(name, personList);
+            try
+            {
+                return PersonDb.People.Find(Id);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
         }
 
-        public static TimeSpan GetPersonRemainingTimeForBirthday(Person person)
+        public void AddPerson(Person person)
         {
-            return _personRepository.GetPersonRemainingTimeForBirthday(person);
+            PersonDb.Add(person);
+            PersonDb.SaveChanges();
         }
+
+        public void UpdatePerson(Person person)
+        {
+            PersonDb.Update(person);
+            PersonDb.SaveChanges();
+        }
+
+        public void DeletePerson(Person person)
+        {
+            try
+            {
+                PersonDb.Remove(person);
+                PersonDb.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
+        public void AddFriend(Person person, int friendId)
+        {
+            try
+            {
+                person.AddFriend(friendId);
+                PersonDb.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
+        public void RemoveFriend(Person person, int friendId)
+        {
+            try
+            {
+                person.RemoveFriend(friendId);
+                PersonDb.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        }
+
     }
 }

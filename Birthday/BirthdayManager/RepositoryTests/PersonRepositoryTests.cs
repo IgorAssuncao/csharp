@@ -84,7 +84,7 @@ namespace RepositoryTests
 
             var PersonRepositoryMock = Substitute.For<IPersonRepository>();
 
-            PersonRepositoryMock.GetPersonRemainingTimeForBirthday(personFixture).Returns(PersonRepository.GetPersonRemainingTimeForBirthday(personFixture));
+            PersonRepositoryMock.GetPersonRemainingTimeForBirthday(personFixture).Returns(PersonRepository2.GetPersonRemainingTimeForBirthday(personFixture));
 
             var result = PersonRepositoryMock.GetPersonRemainingTimeForBirthday(personFixture);
 

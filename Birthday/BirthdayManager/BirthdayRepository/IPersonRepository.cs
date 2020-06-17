@@ -1,15 +1,22 @@
 ﻿using Model;
-using System;
 using System.Collections.Generic;
 
 namespace Repository
 {
     public interface IPersonRepository
     {
-        public bool AddPerson(Person person, List<Person> personList);
+        public List<Person> GetAllPeople();
 
-        public Person GetPersonByName(string name, List<Person> personList);
+        public Person GetPersonById(int Id);
 
-        public TimeSpan GetPersonRemainingTimeForBirthday(Person person);
+        public void AddPerson(Person Person);
+
+        public void UpdatePerson(Person person);
+
+        public void DeletePerson(Person person);
+
+        public void AddFriend(Person person, int FriendId);
+
+        public void RemoveFriend(Person person, int FriendId);
     }
 }
