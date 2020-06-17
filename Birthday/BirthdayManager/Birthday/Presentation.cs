@@ -18,7 +18,7 @@ namespace Presentation
             personContext.Database.Migrate();
             
 
-            char[] validOptions = {'0', '1', '2', '3', '4', '5', '6', '7' };
+            char[] validOptions = {'0', '1', '2', '3', '4', '5', '6', '7', '8' };
             char option;
 
             do
@@ -27,11 +27,12 @@ namespace Presentation
                 Console.WriteLine("0 - Exit");
                 Console.WriteLine("1 - Get All People");
                 Console.WriteLine("2 - Search Person By Id");
-                Console.WriteLine("3 - Add Person");
-                Console.WriteLine("4 - Update Person");
-                Console.WriteLine("5 - Remove Person");
-                Console.WriteLine("6 - Add Friend");
-                Console.WriteLine("7 - Remove Friend");
+                Console.WriteLine("3 - Get all people that birthday is today");
+                Console.WriteLine("4 - Add Person");
+                Console.WriteLine("5 - Update Person");
+                Console.WriteLine("6 - Remove Person");
+                Console.WriteLine("7 - Add Friend");
+                Console.WriteLine("8 - Remove Friend");
 
                 Console.Write("Option: ");
                 option = Console.ReadLine().ToCharArray()[0];
@@ -47,18 +48,21 @@ namespace Presentation
                         SearchPersonById();
                         break;
                     case '3':
-                        AddPerson();
+                        GetAllPeopleThatBirthdayIsToday();
                         break;
                     case '4':
-                        UpdatePerson();
+                        AddPerson();
                         break;
                     case '5':
-                        RemovePerson();
+                        UpdatePerson();
                         break;
                     case '6':
-                        AddFriend();
+                        RemovePerson();
                         break;
                     case '7':
+                        AddFriend();
+                        break;
+                    case '8':
                         RemoveFriend();
                         break;
                 }
@@ -104,7 +108,7 @@ namespace Presentation
                 Console.WriteLine($"Id: {person.Person.Id}");
                 Console.WriteLine($"Full Name: {person.Person.GetFullName()}");
                 Console.WriteLine($"Birthday: {person.Person.Birthday}");
-                Console.WriteLine($"Days for birthday: {person.RemainingTimeForBirthday.Days}");
+                Console.WriteLine($"Days for birthday: {person.RemainingDaysForBirthday}");
                 if (person.Person.Friends.Count > 0)
                 {
                     Console.WriteLine("Friends: [");
@@ -112,7 +116,8 @@ namespace Presentation
                     {
                         Console.WriteLine($"-- Friend Id: {friend.friendId}");
                         var friendFound = PersonService.GetById(friend.friendId);
-                        Console.WriteLine($"-- Friend Name: {friendFound.Person.Name},");
+                        Console.WriteLine($"-- Friend Name: {friendFound.Person.GetFullName()}");
+                        Console.WriteLine($"-- Remaining days for birthday friend: {friendFound.RemainingDaysForBirthday}");
                         Console.WriteLine("-------------------------------");
                     }
                     Console.WriteLine("]");
@@ -122,8 +127,30 @@ namespace Presentation
             }
 
             Console.WriteLine();
-        
         }
+
+        static void GetAllPeopleThatBirthdayIsToday()
+        {
+            List<Person> people = PersonService.GetAllPeopleThatBirthdayIsToday();
+
+            Console.WriteLine();
+            
+            if (people.Count <= 0)
+            {
+                Console.WriteLine("No one has birthday today.");
+                Console.WriteLine();
+                return;
+            }
+
+            foreach(Person person in people)
+            {
+                Console.WriteLine($"Person Id: {person.Id}");
+                Console.WriteLine($"Person Name: {person.GetFullName()}");
+                Console.WriteLine($"Person Birthday: {person.Birthday}");
+                Console.WriteLine("-------------------------------");
+            }
+        }
+
         static void AddPerson()
         {
             string name = ReadStringFromInput("Insert your name: ");
@@ -196,9 +223,12 @@ namespace Presentation
 
             PersonFound friendFound = PersonService.GetById(FriendId);
             if (!friendFound.Found)
+            {
                 Console.WriteLine("ID does not exists.");
+                return;
+            }
 
-            if (personFound.Person.Friends.Exists(person => person.Id == friendFound.Person.Id)) {
+            if (personFound.Person.Friends.Exists(person => person.personId == personFound.Person.Id && person.friendId == friendFound.Person.Id)) {
                 Console.WriteLine("This person is already your friend.");
                 return;
             }
@@ -227,12 +257,12 @@ namespace Presentation
 
             PersonFound friendFound = PersonService.GetById(FriendId);
             if (!friendFound.Found)
+            {
                 Console.WriteLine("ID does not exists.");
+                return;
+            }
 
-            var aux = personFound.Person.Friends;
-            var aux2 = personFound.Person.Friends.Find(personFriend => personFriend.friendId == friendFound.Person.Id);
-
-            if (!personFound.Person.Friends.Exists(personFriend => personFriend.friendId == friendFound.Person.Id)) {
+            if (!personFound.Person.Friends.Exists(personFriend => personFriend.personId == personFound.Person.Id && personFriend.friendId == friendFound.Person.Id)) {
                 Console.WriteLine("This person is not your friend.");
                 return;
             }

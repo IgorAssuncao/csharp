@@ -3,8 +3,6 @@ using Model;
 using Repository;
 using System;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
-using System.Runtime.CompilerServices;
 
 namespace Service
 {
@@ -25,7 +23,7 @@ namespace Service
 
                 personStatus = person != null ? new PersonFound { Found = true, Person = person, Message = "Person Found!" } : throw new Exception("Person not found");
 
-                personStatus.RemainingTimeForBirthday = person.CalculatePersonBirthday();
+                personStatus.RemainingDaysForBirthday = person.CalculateNextPersonBirthday();
 
                 return personStatus;
             }
@@ -33,6 +31,10 @@ namespace Service
             {
                 return new PersonFound { Found = false, Message = exception.Message };
             }
+        }
+        public static List<Person> GetAllPeopleThatBirthdayIsToday()
+        {
+            return PersonRepositoryWrapper.GetAllPeopleThatBirthdayIsToday();
         }
 
         public static PersonAdded Add(string name, string lastname, DateTime birthday)

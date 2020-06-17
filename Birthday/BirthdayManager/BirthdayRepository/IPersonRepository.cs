@@ -9,6 +9,8 @@ namespace Repository
 
         public Person GetPersonById(int Id);
 
+        public List<Person> GetAllPeopleThatBirthdayIsToday();
+
         public void AddPerson(Person Person);
 
         public void UpdatePerson(Person person);

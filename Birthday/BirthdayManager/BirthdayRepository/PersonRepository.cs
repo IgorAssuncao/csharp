@@ -37,6 +37,23 @@ namespace Repository
             }
         }
 
+        public List<Person> GetAllPeopleThatBirthdayIsToday()
+        {
+            try
+            {
+                List<Person> allPeople = PersonDb.People.ToList<Person>();
+
+                allPeople = allPeople.FindAll(person => person.CalculateNextPersonBirthday() == 0);
+
+                return allPeople;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
+
         public void AddPerson(Person person)
         {
             PersonDb.Add(person);

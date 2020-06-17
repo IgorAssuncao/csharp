@@ -8,6 +8,6 @@ namespace CommonPersonStatus
         public bool Found { get; set; }
         public string Message { get; set; }
         public Person Person { get; set; }
-        public TimeSpan RemainingTimeForBirthday { get; set; }
+        public int RemainingDaysForBirthday { get; set; }
     }
 }

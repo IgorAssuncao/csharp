@@ -17,6 +17,12 @@ namespace Repository
         {
             return _personRepository.GetPersonById(Id);
         }
+
+        public static List<Person> GetAllPeopleThatBirthdayIsToday()
+        {
+            return _personRepository.GetAllPeopleThatBirthdayIsToday();
+        }
+
         public static bool AddPerson(Person person)
         {
             try

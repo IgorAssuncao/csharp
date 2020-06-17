@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 
 namespace Model
 {
@@ -7,14 +6,14 @@ namespace Model
     {
         public static string GetFullName(this Person person) => $"{person.Name} {person.Lastname}";
 
-        public static TimeSpan CalculatePersonBirthday(this Person person)
+        public static int CalculateNextPersonBirthday(this Person person)
         {
             DateTime aux = new DateTime(DateTime.Now.Year, person.Birthday.Month, person.Birthday.Day);
 
             if (aux.Day.CompareTo(DateTime.Now.Day) < 0 && aux.Month.CompareTo(DateTime.Now.Month) <= 0)
                 aux = aux.AddYears(1);
 
-            return aux.Subtract(DateTime.Now);
+            return aux.Subtract(DateTime.Now).Days;
         }
 
         public static void AddFriend(this Person person, int friendId)
