@@ -15,15 +15,5 @@ namespace Model
 
             return aux.Subtract(DateTime.Now).Days;
         }
-
-        public static void AddFriend(this Person person, int friendId)
-        {
-            person.Friends.Add(new PersonFriends(person.Id, friendId));
-        }
-
-        public static void RemoveFriend(this Person person, int friendId)
-        {
-            person.Friends.Remove(person.Friends.Find(friend => friend.friendId == friendId));
-        }
     }
 }

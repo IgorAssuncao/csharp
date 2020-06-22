@@ -1,4 +1,5 @@
 ﻿using CommonPersonStatus;
+using Microsoft.Extensions.Configuration;
 using Model;
 using Repository;
 using System;
@@ -8,16 +9,18 @@ namespace Service
 {
     public static class PersonService
     {
+        public static PersonRepository personRepository { get; set; }
+
         public static List<Person> GetAllPeople()
         {
-            return PersonRepositoryWrapper.GetAllPeople();
+            return personRepository.GetAllPeople();
         }
 
         public static PersonFound GetById(int Id)
         {
             try
             {
-                Person person = PersonRepositoryWrapper.GetPersonById(Id);
+                Person person = personRepository.GetPersonById(Id);
 
                 PersonFound personStatus;
 
@@ -35,17 +38,12 @@ namespace Service
 
         public static List<Person> SearchByNameOrLastname(string text)
         {
-            return PersonRepositoryWrapper.SearchByNameOrLastname(text);
-        }
-
-        public static List<Person> GetPersonFriends(int id)
-        {
-            return PersonRepositoryWrapper.GetPersonFriends(id);
+            return personRepository.SearchByNameOrLastname(text);
         }
 
         public static List<Person> GetAllPeopleThatBirthdayIsToday()
         {
-            return PersonRepositoryWrapper.GetAllPeopleThatBirthdayIsToday();
+            return personRepository.GetAllPeopleThatBirthdayIsToday();
         }
 
         public static PersonAdded Add(string name, string lastname, DateTime birthday)
@@ -58,14 +56,11 @@ namespace Service
                 if (lastname == "")
                     throw new Exception("Lastame is empty");
 
-                Person person = new Person(name, lastname, birthday);
+                Person person = new Person(0, name, lastname, birthday);
 
-                bool addPersonResult = PersonRepositoryWrapper.AddPerson(person);
+                personRepository.AddPerson(person);
 
-                PersonAdded personStatus = new PersonAdded { Registered = addPersonResult };
-
-                personStatus.Message = personStatus.Registered ? "Person Registered" : "Person not Registered";
-
+                PersonAdded personStatus = new PersonAdded { Registered = true, Message = "Person Registered" };
                 return personStatus;
             }
             catch (Exception exception)
@@ -82,31 +77,13 @@ namespace Service
             person.Lastname = Lastname;
             person.Birthday = Birthday;
 
-            PersonRepositoryWrapper.UpdatePerson(person);
+            personRepository.UpdatePerson(person);
         }
 
         public static void DeletePerson(int PersonId)
         {
-            Person person = PersonRepositoryWrapper.GetPersonById(PersonId);
-            PersonRepositoryWrapper.DeletePerson(person);
-        }
-
-        public static void AddPersonFriend(int PersonId, int FriendId)
-        {
-            Person person = PersonRepositoryWrapper.GetPersonById(PersonId);
-            PersonRepositoryWrapper.AddFriend(person, FriendId);
-
-            Person friend = PersonRepositoryWrapper.GetPersonById(FriendId);
-            PersonRepositoryWrapper.AddFriend(friend, PersonId);
-        }
-
-        public static void RemovePersonFriend(int PersonId, int FriendId)
-        {
-            Person person = PersonRepositoryWrapper.GetPersonById(PersonId);
-            PersonRepositoryWrapper.RemoveFriend(person, FriendId);
-
-            Person friend = PersonRepositoryWrapper.GetPersonById(FriendId);
-            PersonRepositoryWrapper.RemoveFriend(friend, PersonId);
+            Person person = personRepository.GetPersonById(PersonId);
+            personRepository.DeletePerson(person);
         }
     }
 }

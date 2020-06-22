@@ -2,135 +2,254 @@
 using System.Linq;
 
 using Model;
-using Context;
 using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
+using System.Data.SqlClient;
 
 namespace Repository
 {
     public class PersonRepository : IPersonRepository
     {
-        PersonContext PersonDb = new PersonContext();
+        private string Connectionstring;
+
+        public PersonRepository(IConfiguration configuration)
+        {
+            this.Connectionstring = configuration.GetConnectionString("BirthdayDB");
+        }
 
         public List<Person> GetAllPeople()
         {
-            try
+            using(var connection = new SqlConnection(Connectionstring))
             {
-                return PersonDb.People.ToList();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return new List<Person>();
+                List<Person> people = new List<Person>();
+
+                connection.Open();
+                try
+                {
+                    SqlCommand sqlCommand = connection.CreateCommand();
+
+                    sqlCommand.CommandText = "SELECT * FROM PERSON";
+
+                    // ExecuteReader() returns data from DB but it's an Iterable.
+                    SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+
+                    while(sqlDataReader.Read())
+                    {
+                        people.Add(new Person(
+                            Convert.ToInt32(sqlDataReader["id"].ToString()),
+                            sqlDataReader["name"].ToString(),
+                            sqlDataReader["lastname"].ToString(),
+                            DateTime.Parse(sqlDataReader["birthday"].ToString())
+                        ));
+                    }
+
+                    return people;
+                }
+                catch
+                {
+                    connection.Close();
+                    return new List<Person>();
+                }
             }
         }
 
         public Person GetPersonById(int Id)
         {
-            try
+            using(var connection = new SqlConnection(Connectionstring))
             {
-                return PersonDb.People.Find(Id);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return null;
+                List<Person> people = new List<Person>();
+
+                connection.Open();
+                try
+                {
+                    SqlCommand sqlCommand = connection.CreateCommand();
+
+                    sqlCommand.CommandText = "SELECT * FROM PERSON WHERE id = @p1";
+                    sqlCommand.Parameters.AddWithValue("p1", Id);
+
+                    // ExecuteReader() returns data from DB but it's an Iterable.
+                    SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+
+                    while(sqlDataReader.Read())
+                    {
+                        people.Add(new Person(
+                            Convert.ToInt32(sqlDataReader["id"].ToString()),
+                            sqlDataReader["name"].ToString(),
+                            sqlDataReader["lastname"].ToString(),
+                            DateTime.Parse(sqlDataReader["birthday"].ToString())
+                        ));
+                    }
+
+                    return people.First();
+                }
+                catch
+                {
+                    connection.Close();
+                    return null;
+                }
             }
         }
 
         public List<Person> SearchByNameOrLastname(string text)
         {
-            try
+            using(var connection = new SqlConnection(Connectionstring))
             {
-                return PersonDb.People.Where(person => person.Name.Contains(text) || person.Lastname.Contains(text)).ToList();
+                List<Person> people = new List<Person>();
+
+                connection.Open();
+                try
+                {
+                    SqlCommand sqlCommand = connection.CreateCommand();
+
+                    sqlCommand.CommandText = "SELECT * FROM PERSON WHERE name LIKE @p1 OR lastname LIKE @p1";
+                    sqlCommand.Parameters.AddWithValue("p1", "%" + text + "%");
+
+                    // ExecuteReader() returns data from DB but it's an Iterable.
+                    SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+
+                    while(sqlDataReader.Read())
+                    {
+                        people.Add(new Person(
+                            Convert.ToInt32(sqlDataReader["id"].ToString()),
+                            sqlDataReader["name"].ToString(),
+                            sqlDataReader["lastname"].ToString(),
+                            DateTime.Parse(sqlDataReader["birthday"].ToString())
+                        ));
+                    }
+
+                    return people;
+                }
+                catch
+                {
+                    connection.Close();
+                    return new List<Person>();
+                }
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return new List<Person>();
-            }
-        }
-
-        public List<Person> GetPersonFriends(int id)
-        {
-            Person person = PersonDb.People.Find(id);
-
-            List<Person> friends = new List<Person>();
-
-            foreach(PersonFriends personFriend in person.Friends)
-            {
-                friends.Add(PersonDb.People.Find(personFriend.Id));
-            }
-
-            return friends;
         }
 
         public List<Person> GetAllPeopleThatBirthdayIsToday()
         {
-            try
+            using(var connection = new SqlConnection(Connectionstring))
             {
-                List<Person> allPeople = PersonDb.People.ToList();
+                List<Person> people = new List<Person>();
 
-                allPeople = allPeople.FindAll(person => person.CalculatePersonNextBirthday() == 0);
+                connection.Open();
+                try
+                {
+                    SqlCommand sqlCommand = connection.CreateCommand();
 
-                return allPeople;
+                    sqlCommand.CommandText = @"SELECT * FROM PERSON
+                                                WHERE DAY(birthday) = DAY(DATE(NOW))
+                                                AND
+                                                MONTH(birthday) = MONTH(DATE(NOW))";
+
+                    // ExecuteReader() returns data from DB but it's an Iterable.
+                    SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
+
+                    while(sqlDataReader.Read())
+                    {
+                        people.Add(new Person(
+                            Convert.ToInt32(sqlDataReader["id"].ToString()),
+                            sqlDataReader["name"].ToString(),
+                            sqlDataReader["lastname"].ToString(),
+                            DateTime.Parse(sqlDataReader["birthday"].ToString())
+                        ));
+                    }
+
+                    return people;
+                }
+                catch
+                {
+                    connection.Close();
+                    return new List<Person>();
+                }
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                return new List<Person>();
-            }
+
         }
 
         public void AddPerson(Person person)
         {
-            PersonDb.Add(person);
-            PersonDb.SaveChanges();
+            using(var connection = new SqlConnection(Connectionstring))
+            {
+                connection.Open();
+                try
+                {
+                    SqlCommand sqlCommand = connection.CreateCommand();
+
+                    sqlCommand.CommandText = "INSERT INTO PERSON(name, lastname, birthday) VALUES (@p1, @p2, @p3)";
+                    sqlCommand.Parameters.AddWithValue("p1", person.Name);
+                    sqlCommand.Parameters.AddWithValue("p2", person.Lastname);
+                    sqlCommand.Parameters.AddWithValue("p3", person.Birthday);
+
+                    // Execute query but does not return anything;
+                    sqlCommand.ExecuteNonQuery();
+
+                    connection.Close();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    connection.Close();
+                }
+            }
         }
 
         public void UpdatePerson(Person person)
         {
-            PersonDb.Update(person);
-            PersonDb.SaveChanges();
+            using(var connection = new SqlConnection(Connectionstring))
+            {
+                connection.Open();
+                try
+                {
+                    SqlCommand sqlCommand = connection.CreateCommand();
+
+                    sqlCommand.CommandText = @"UPDATE PERSON
+                                                SET name = @p2,
+                                                lastname = @p3,
+                                                birthday = @p4
+                                                WHERE id = @p1";
+
+                    sqlCommand.Parameters.AddWithValue("p1", person.Id);
+                    sqlCommand.Parameters.AddWithValue("p2", person.Name);
+                    sqlCommand.Parameters.AddWithValue("p3", person.Lastname);
+                    sqlCommand.Parameters.AddWithValue("p4", person.Birthday);
+
+                    // Execute query but does not return anything;
+                    sqlCommand.ExecuteNonQuery();
+
+                    connection.Close();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    connection.Close();
+                }
+            }
         }
 
         public void DeletePerson(Person person)
         {
-            try
+            using(var connection = new SqlConnection(Connectionstring))
             {
-                PersonDb.Remove(person);
-                PersonDb.SaveChanges();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
+                connection.Open();
+                try
+                {
+                    SqlCommand sqlCommand = connection.CreateCommand();
+
+                    sqlCommand.CommandText = "DELETE FROM PERSON WHERE id = @p1";
+                    sqlCommand.Parameters.AddWithValue("p1", person.Id);
+
+                    // Execute query but does not return anything;
+                    sqlCommand.ExecuteNonQuery();
+
+                    connection.Close();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    connection.Close();
+                }
             }
         }
-
-        public void AddFriend(Person person, int friendId)
-        {
-            try
-            {
-                person.AddFriend(friendId);
-                PersonDb.SaveChanges();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-        }
-
-        public void RemoveFriend(Person person, int friendId)
-        {
-            try
-            {
-                person.RemoveFriend(friendId);
-                PersonDb.SaveChanges();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-        }
-
     }
 }

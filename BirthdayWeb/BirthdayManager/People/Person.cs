@@ -14,16 +14,14 @@ namespace Model
         public string Lastname { get; set; }
         public DateTime Birthday { get; set; }
 
-        public List<PersonFriends> Friends { get; set; }
-
         public Person() { }
 
-        public Person(string name, string lastname, DateTime birthday)
+        public Person(int id, string name, string lastname, DateTime birthday)
         {
+            Id = id;
             Name = name;
             Lastname = lastname;
             Birthday = birthday;
-            Friends = new List<PersonFriends>();
         }
 
         public override string ToString() => $"{this.Name} {this.Lastname} - {this.Birthday}";

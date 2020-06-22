@@ -11,8 +11,6 @@ namespace Repository
 
         public List<Person> SearchByNameOrLastname(string text);
 
-        public List<Person> GetPersonFriends(int id);
-
         public List<Person> GetAllPeopleThatBirthdayIsToday();
 
         public void AddPerson(Person Person);
@@ -20,9 +18,5 @@ namespace Repository
         public void UpdatePerson(Person person);
 
         public void DeletePerson(Person person);
-
-        public void AddFriend(Person person, int FriendId);
-
-        public void RemoveFriend(Person person, int FriendId);
     }
 }
