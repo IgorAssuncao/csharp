@@ -41,11 +41,6 @@ namespace Service
             return personRepository.SearchByNameOrLastname(text);
         }
 
-        public static List<Person> GetAllPeopleThatBirthdayIsToday()
-        {
-            return personRepository.GetAllPeopleThatBirthdayIsToday();
-        }
-
         public static PersonAdded Add(string name, string lastname, DateTime birthday)
         {
             try

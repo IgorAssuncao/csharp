@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-
 using Model;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
@@ -28,7 +27,7 @@ namespace Repository
                 {
                     SqlCommand sqlCommand = connection.CreateCommand();
 
-                    sqlCommand.CommandText = "SELECT * FROM PERSON";
+                    sqlCommand.CommandText = "SELECT * FROM PERSON ORDER BY DAY(birthday) - DAY(CAST(GETDATE() AS DATE)), MONTH(birthday) - MONTH(CAST(GETDATE() AS DATE));";
 
                     // ExecuteReader() returns data from DB but it's an Iterable.
                     SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
@@ -47,8 +46,11 @@ namespace Repository
                 }
                 catch
                 {
-                    connection.Close();
                     return new List<Person>();
+                }
+                finally
+                {
+                    connection.Close();
                 }
             }
         }
@@ -84,8 +86,11 @@ namespace Repository
                 }
                 catch
                 {
-                    connection.Close();
                     return null;
+                }
+                finally
+                {
+                    connection.Close();
                 }
             }
         }
@@ -121,50 +126,13 @@ namespace Repository
                 }
                 catch
                 {
-                    connection.Close();
                     return new List<Person>();
                 }
-            }
-        }
-
-        public List<Person> GetAllPeopleThatBirthdayIsToday()
-        {
-            using(var connection = new SqlConnection(Connectionstring))
-            {
-                List<Person> people = new List<Person>();
-
-                connection.Open();
-                try
-                {
-                    SqlCommand sqlCommand = connection.CreateCommand();
-
-                    sqlCommand.CommandText = @"SELECT * FROM PERSON
-                                                WHERE DAY(birthday) = DAY(DATE(NOW))
-                                                AND
-                                                MONTH(birthday) = MONTH(DATE(NOW))";
-
-                    // ExecuteReader() returns data from DB but it's an Iterable.
-                    SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
-
-                    while(sqlDataReader.Read())
-                    {
-                        people.Add(new Person(
-                            Convert.ToInt32(sqlDataReader["id"].ToString()),
-                            sqlDataReader["name"].ToString(),
-                            sqlDataReader["lastname"].ToString(),
-                            DateTime.Parse(sqlDataReader["birthday"].ToString())
-                        ));
-                    }
-
-                    return people;
-                }
-                catch
+                finally
                 {
                     connection.Close();
-                    return new List<Person>();
                 }
             }
-
         }
 
         public void AddPerson(Person person)
@@ -189,6 +157,9 @@ namespace Repository
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
+                }
+                finally
+                {
                     connection.Close();
                 }
             }
@@ -216,12 +187,13 @@ namespace Repository
 
                     // Execute query but does not return anything;
                     sqlCommand.ExecuteNonQuery();
-
-                    connection.Close();
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
+                }
+                finally
+                {
                     connection.Close();
                 }
             }
@@ -241,12 +213,13 @@ namespace Repository
 
                     // Execute query but does not return anything;
                     sqlCommand.ExecuteNonQuery();
-
-                    connection.Close();
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
+                }
+                finally
+                {
                     connection.Close();
                 }
             }

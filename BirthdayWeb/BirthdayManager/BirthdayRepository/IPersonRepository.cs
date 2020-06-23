@@ -11,8 +11,6 @@ namespace Repository
 
         public List<Person> SearchByNameOrLastname(string text);
 
-        public List<Person> GetAllPeopleThatBirthdayIsToday();
-
         public void AddPerson(Person Person);
 
         public void UpdatePerson(Person person);

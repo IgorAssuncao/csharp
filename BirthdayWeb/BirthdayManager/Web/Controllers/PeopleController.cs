@@ -1,10 +1,8 @@
 ﻿using CommonPersonStatus;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Model;
 using Service;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Web.Controllers
 {
@@ -14,8 +12,6 @@ namespace Web.Controllers
         public ActionResult Index()
         {
             List<Person> people = PersonService.GetAllPeople();
-
-            people = people.OrderBy(person => person.CalculatePersonNextBirthday()).ToList();
 
             return View(people);
         }
