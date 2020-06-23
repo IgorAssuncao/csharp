@@ -27,7 +27,7 @@ namespace Repository
                 {
                     SqlCommand sqlCommand = connection.CreateCommand();
 
-                    sqlCommand.CommandText = "SELECT * FROM PERSON ORDER BY DAY(birthday) - DAY(CAST(GETDATE() AS DATE)), MONTH(birthday) - MONTH(CAST(GETDATE() AS DATE));";
+                    sqlCommand.CommandText = "SELECT * FROM PERSON ORDER BY DAY(birthday) - DAY(CAST(GETDATE() AS DATE)), MONTH(birthday) - MONTH(CAST(GETDATE() AS DATE))";
 
                     // ExecuteReader() returns data from DB but it's an Iterable.
                     SqlDataReader sqlDataReader = sqlCommand.ExecuteReader();
