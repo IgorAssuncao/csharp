@@ -52,16 +52,20 @@ namespace TP3_Auth.Controllers
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.NameIdentifier, id.ToString())
+                    new Claim(JwtRegisteredClaimNames.UniqueName, id.ToString())
                 }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(
                     Encoding.ASCII.GetBytes(Configuration["Token:Secret"])),
                     SecurityAlgorithms.HmacSha256Signature
-                )
+                ),
+                Audience = "TP3-AUTH-API",
+                Issuer = "TP3-AUTH-API"
             };
 
             JwtSecurityToken token = TokenHandler.CreateJwtSecurityToken(tokenDescriptor);
+
+            TokenHandler.WriteToken(token);
 
             return token.RawData;
         }
@@ -85,7 +89,9 @@ namespace TP3_Auth.Controllers
 
             string token = GenerateToken(friend.Id);
 
-            return Ok(new AuthReturn { Token = token });
+
+
+            return Ok(new { Token = token });
         }
 
         // POST: api/Friends
@@ -120,10 +126,5 @@ namespace TP3_Auth.Controllers
 
             return Ok();
         }
-    }
-
-    class AuthReturn
-    {
-        public string Token { get; set; }
     }
 }
