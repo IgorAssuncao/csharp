@@ -1,0 +1,3 @@
+[submodule "pb-dotnet-8"]
+	path = pb-dotnet-8
+	url = https://github.com/IgorAssuncao/pb-dotnet-8.git
