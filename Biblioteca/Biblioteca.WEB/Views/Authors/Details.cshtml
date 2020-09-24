@@ -41,6 +41,15 @@
             @Html.DisplayFor(model => model.Birthday)
         </dd>
     </dl>
+    <h5>Books</h5>
+    @foreach(var book in Model.Books)
+    {
+        <span>BookId</span>
+        <hr />
+        @book
+        <hr />
+        <hr />
+    }
 </div>
 <div>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
