@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Biblioteca.Mappings\Biblioteca.Mappings.csproj" />
+    <ProjectReference Include="..\Biblioteca.Models\Biblioteca.Models.csproj" />
+  </ItemGroup>
+
+</Project>
